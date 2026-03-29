@@ -1,6 +1,7 @@
 # 🌌 Nebula Engine
 
 **High-Performance Collaborative Canvas Engine**
+
 _Next.js 15+ | Effector | Yjs (CRDT) | Turborepo | FSD Architecture_
 
 ## 🚀 Обзор
@@ -93,6 +94,6 @@ npm run dev
 
 ## 📈 Roadmap
 
-- [] Перенос рендеринга на Canvas API / Konva для поддержки 10,000+ объектов.
-- [] Добавление Shared Workers для синхронизации вкладок без сетевого оверхеда.
-- [] Интеграция с Supabase для персистентного хранения документов.
+- [ ] Перенос рендеринга на Canvas API / Konva для поддержки 10,000+ объектов.
+- [ ] Добавление Shared Workers для синхронизации вкладок без сетевого оверхеда.
+- [ ] Интеграция с Supabase для персистентного хранения документов.
