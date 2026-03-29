@@ -1,0 +1,23 @@
+{
+  "name": "@nebula/core",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "effector": "latest",
+    "effector-react": "latest",
+    "y-webrtc": "latest",
+    "yjs": "latest"
+  },
+  "devDependencies": {
+    "@nebula/typescript-config": "*",
+    "typescript": "latest",
+    "vitest": "^4.1.2"
+  }
+}

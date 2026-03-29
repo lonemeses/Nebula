@@ -1,159 +1,98 @@
-# Turborepo starter
+# 🌌 Nebula Engine
 
-This Turborepo starter is maintained by the Turborepo core team.
+**High-Performance Collaborative Canvas Engine**
+_Next.js 15+ | Effector | Yjs (CRDT) | Turborepo | FSD Architecture_
 
-## Using this example
+## 🚀 Обзор
 
-Run the following command:
+**Nebula Engine** — это масштабируемая платформа для совместной работы в реальном времени. Проект спроектирован как Engine-first решение: вся бизнес-логика полностью отделена от рендеринга, что позволяет расширять систему новыми типами блоков (плагинами) без изменения основного кода.
 
-```sh
-npx create-turbo@latest
+### Основные фичи:
+
+- **Multiplayer Collaboration:** Синхронизация состояния через WebRTC с использованием CRDT (Yjs). Конфликты данных исключены на уровне математической модели.
+- **Plugin System:** Архитектура "Open-Closed". Новые инструменты (текст, фигуры, изображения) регистрируются в реестре и автоматически появляются в UI.
+- **Advanced State Management:** Сложная логика Undo/Redo на основе снимков состояния (Snapshots) реализована на Effector.
+- **60 FPS Performance:** GPU-ускорение (translate3d), мемоизация компонентов и троттлинг событий мыши для плавной работы при сотнях объектов.
+
+---
+
+## 🛠 Технологический стек
+
+### Core
+
+- **Framework:** Next.js 15 (App Router)
+- **State:** Effector + Effector React (Atomic State)
+- **Real-time:** Yjs (CRDT) + y-webrtc
+- **Styling:** Tailwind CSS v4 (Lightning CSS)
+
+### Architecture & Infrastructure
+
+- **Monorepo:** Turborepo (Shared configs, Core logic, UI Kit)
+- **Methodology:** Feature-Sliced Design (FSD)
+- **Testing:** Vitest (Unit) + Playwright (E2E)
+- **CI/CD:** GitHub Actions (Linting, Testing)
+
+---
+
+## 🏗 Архитектурные решения (Senior Insights)
+
+### 1. Декомпозиция в Monorepo
+
+Проект разделен на пакеты для обеспечения **High Cohesion** и **Low Coupling:**
+
+- `apps/web`: Тонкий клиент на Next.js (только View-слой).
+- `packages/core`: Headless-логика движка (Effector-сторы, Yjs-синхронизация, бизнес-правила).
+- `packages/tsconfig / eslint-config`: Единые стандарты качества кода.
+
+### 2. Синхронизация через CRDT
+
+Вместо традиционных WebSockets с централизованным сервером используется **P2P через WebRTC**. Использование Yjs позволяет избежать Race Conditions при одновременном редактировании одного и того же блока разными пользователями.
+
+### 3. Оптимизация рендеринга
+
+Для достижения высокой производительности при перетаскивании:
+
+- Вычисления координат вынесены в поток композитора через CSS `transform`.
+- Применена строгая мемоизация `BlockWrapper` через `React.memo`, что исключает перерендеринг всего холста при движении одного объекта.
+- Частота обновлений сети ограничена (throttled) до 60Hz.
+
+  ***
+
+## 🚦 Быстрый старт
+
+### 1. Установка зависимостей
+
+```bash
+npm install
 ```
 
-## What's inside?
+### 2. Запуск локального сигнального сервера (WebRTC)
 
-This Turborepo includes the following packages/apps:
+Для работы мультиплеера локально необходимо запустить матчмейкер:
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```bash
+npx y-webrtc-signaling --port 4444
 ```
 
-Without global `turbo`, use your package manager:
+### 3. Запуск приложения
 
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+npm run dev
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Откройте `http://localhost:3000` в двух разных окнах (одно в инкогнито), чтобы протестировать синхронизацию.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+---
 
-```sh
-turbo build --filter=docs
-```
+## 🧪 Тестирование
 
-Without global `turbo`:
+- **Unit (Logic):** `npm run test --workspace=@nebula/core`
+- **E2E (User Flow):** `npx playwright test`
 
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+---
 
-### Develop
+## 📈 Roadmap
 
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+- [] Перенос рендеринга на Canvas API / Konva для поддержки 10,000+ объектов.
+- [] Добавление Shared Workers для синхронизации вкладок без сетевого оверхеда.
+- [] Интеграция с Supabase для персистентного хранения документов.
